@@ -1,5 +1,5 @@
-import type { ECharts } from "echarts";
 import type { TableColumns } from "@pureadmin/table";
+import type { ECharts } from "echarts";
 
 /**
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 、`.tsx` 文件使用即可获得类型提示
@@ -70,6 +70,8 @@ declare global {
     VITE_CDN: boolean;
     VITE_HIDE_HOME: string;
     VITE_COMPRESSION: ViteCompression;
+    VITE_BASE_API: string;
+    VITE_BASE_URL: string;
   }
 
   /**
