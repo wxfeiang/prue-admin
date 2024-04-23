@@ -1,13 +1,15 @@
-import { ref, onMounted } from "vue";
+import { getCodeImg } from "@/api/base";
+import { onMounted, ref } from "vue";
 
 /**
  * 绘制图形验证码
  * @param width - 图形宽度
  * @param height - 图形高度
  */
-export const useImageVerify = (width = 120, height = 40) => {
+export const useImageVerify = (remote = false, width = 120, height = 40) => {
   const domRef = ref<HTMLCanvasElement>();
   const imgCode = ref("");
+  const remoteImg = ref();
 
   function setImgCode(code: string) {
     imgCode.value = code;
@@ -19,14 +21,25 @@ export const useImageVerify = (width = 120, height = 40) => {
   }
 
   onMounted(() => {
-    getImgCode();
+    if (remote) {
+      getNetworkCode();
+    } else {
+      getImgCode();
+    }
   });
+  // 请求在线图形码
+  const getNetworkCode = async () => {
+    const { data } = await getCodeImg();
+    remoteImg.value = data;
+  };
 
   return {
     domRef,
     imgCode,
     setImgCode,
-    getImgCode
+    getImgCode,
+    remoteImg,
+    getNetworkCode
   };
 };
 

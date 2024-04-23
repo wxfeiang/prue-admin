@@ -8,6 +8,7 @@ defineOptions({
 
 interface Props {
   code?: string;
+  remote?: boolean;
 }
 
 interface Emits {
@@ -15,12 +16,14 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  code: ""
+  code: "",
+  remote: false
 });
 
 const emit = defineEmits<Emits>();
 
-const { domRef, imgCode, setImgCode, getImgCode } = useImageVerify();
+const { domRef, imgCode, setImgCode, getImgCode, remoteImg, getNetworkCode } =
+  useImageVerify(props.remote);
 
 watch(
   () => props.code,
@@ -37,10 +40,14 @@ defineExpose({ getImgCode });
 
 <template>
   <canvas
+    v-if="!remote"
     ref="domRef"
     width="120"
     height="40"
     class="cursor-pointer"
     @click="getImgCode"
   />
+  <template v-else>
+    <div @click="getNetworkCode" v-html="remoteImg" />
+  </template>
 </template>

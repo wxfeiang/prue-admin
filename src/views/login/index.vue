@@ -1,37 +1,37 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import Motion from "./utils/motion";
-import { useRouter } from "vue-router";
-import { message } from "@/utils/message";
-import { loginRules } from "./utils/rule";
-import phone from "./components/phone.vue";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { ReImageVerify } from "@/components/ReImageVerify";
 import TypeIt from "@/components/ReTypeit";
+import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { useLayout } from "@/layout/hooks/useLayout";
+import { useNav } from "@/layout/hooks/useNav";
+import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
+import { $t, transformI18n } from "@/plugins/i18n";
+import { getTopMenu, initRouter } from "@/router/utils";
+import { useUserStoreHook } from "@/store/modules/user";
+import { message } from "@/utils/message";
 import { debounce } from "@pureadmin/utils";
+import { useEventListener } from "@vueuse/core";
+import type { FormInstance } from "element-plus";
+import { computed, reactive, ref, toRaw, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import phone from "./components/phone.vue";
 import qrCode from "./components/qrCode.vue";
 import regist from "./components/regist.vue";
 import update from "./components/update.vue";
-import { useNav } from "@/layout/hooks/useNav";
-import { useEventListener } from "@vueuse/core";
-import type { FormInstance } from "element-plus";
-import { $t, transformI18n } from "@/plugins/i18n";
 import { operates, thirdParty } from "./utils/enums";
-import { useLayout } from "@/layout/hooks/useLayout";
-import { useUserStoreHook } from "@/store/modules/user";
-import { initRouter, getTopMenu } from "@/router/utils";
-import { bg, avatar, illustration } from "./utils/static";
-import { ReImageVerify } from "@/components/ReImageVerify";
-import { ref, toRaw, reactive, watch, computed } from "vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
-import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import Motion from "./utils/motion";
+import { loginRules } from "./utils/rule";
+import { avatar, bg, illustration } from "./utils/static";
 
-import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
+import dayIcon from "@/assets/svg/day.svg?component";
 import globalization from "@/assets/svg/globalization.svg?component";
-import Lock from "@iconify-icons/ri/lock-fill";
 import Check from "@iconify-icons/ep/check";
-import User from "@iconify-icons/ri/user-3-fill";
 import Info from "@iconify-icons/ri/information-line";
+import Lock from "@iconify-icons/ri/lock-fill";
+import User from "@iconify-icons/ri/user-3-fill";
 
 defineOptions({
   name: "Login"
@@ -220,7 +220,7 @@ watch(loginDay, value => {
                   :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
                 >
                   <template v-slot:append>
-                    <ReImageVerify v-model:code="imgCode" />
+                    <ReImageVerify v-model:code="imgCode" :remote="true" />
                   </template>
                 </el-input>
               </el-form-item>
