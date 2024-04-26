@@ -207,4 +207,14 @@ declare global {
       touched?: boolean;
     };
   }
+
+  /**
+   * 扩展  全局的返回结果...
+   */
+  interface GlobalResult {
+    success: boolean;
+    message?: string;
+    status?: number;
+    code?: number;
+  }
 }

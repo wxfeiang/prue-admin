@@ -1,6 +1,6 @@
-import Cookies from "js-cookie";
-import { storageLocal } from "@pureadmin/utils";
 import { useUserStoreHook } from "@/store/modules/user";
+import { storageLocal } from "@pureadmin/utils";
+import Cookies from "js-cookie";
 
 export interface DataInfo<T> {
   /** token */
@@ -72,7 +72,7 @@ export function setToken(data: DataInfo<Date>) {
       roles
     });
   }
-
+  console.log("🍾", data, data.username);
   if (data.username && data.roles) {
     const { username, roles } = data;
     setUserKey(username, roles);

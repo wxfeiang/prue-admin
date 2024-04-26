@@ -58,7 +58,7 @@ const { locale, translationCh, translationEn } = useTranslationLang();
 
 const ruleForm = reactive({
   username: "admin",
-  password: "admin123",
+  password: "123456admin",
   verifyCode: ""
 });
 
@@ -67,8 +67,11 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true;
+      let params = {
+        ...ruleForm
+      };
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername(params)
         .then(res => {
           if (res.success) {
             // 获取后端路由
@@ -83,7 +86,9 @@ const onLogin = async (formEl: FormInstance | undefined) => {
             });
           }
         })
-        .finally(() => (loading.value = false));
+        .finally(() => {
+          loading.value = false;
+        });
     } else {
       return fields;
     }

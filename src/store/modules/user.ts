@@ -1,14 +1,14 @@
-import { defineStore } from "pinia";
-import { store } from "@/store";
-import type { userType } from "./types";
-import { routerArrays } from "@/layout/types";
-import { router, resetRouter } from "@/router";
-import { storageLocal } from "@pureadmin/utils";
+import type { RefreshTokenResult, UserResult } from "@/api/user";
 import { getLogin, refreshTokenApi } from "@/api/user";
-import type { UserResult, RefreshTokenResult } from "@/api/user";
+import { routerArrays } from "@/layout/types";
+import { resetRouter, router } from "@/router";
+import { store } from "@/store";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
-import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
-
+import { removeToken, setToken, userKey, type DataInfo } from "@/utils/auth";
+import { message } from "@/utils/message";
+import { storageLocal } from "@pureadmin/utils";
+import { defineStore } from "pinia";
+import type { userType } from "./types";
 export const useUserStore = defineStore({
   id: "pure-user",
   state: (): userType => ({
@@ -54,11 +54,23 @@ export const useUserStore = defineStore({
     async loginByUsername(data) {
       return new Promise<UserResult>((resolve, reject) => {
         getLogin(data)
-          .then(data => {
-            if (data) {
-              setToken(data.data);
-              resolve(data);
+          .then((res: any) => {
+            if (res.success) {
+              const restData = {
+                roles: res.data.role.map((item: any) => item.id),
+                accessToken: res.data.token,
+                refreshToken: res.data.token,
+                expires: "2030/10/30 00:00:00"
+              };
+              res.data = {
+                ...res.data,
+                ...restData
+              };
+              setToken(res.data);
+            } else {
+              message(`${res.message}`, { type: "error" });
             }
+            resolve(res);
           })
           .catch(error => {
             reject(error);
@@ -79,8 +91,9 @@ export const useUserStore = defineStore({
       return new Promise<RefreshTokenResult>((resolve, reject) => {
         refreshTokenApi(data)
           .then(data => {
+            console.log("🦐[data]:", data);
             if (data) {
-              setToken(data.data);
+              setToken(data);
               resolve(data);
             }
           })

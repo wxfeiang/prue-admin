@@ -1,18 +1,18 @@
+import { useUserStoreHook } from "@/store/modules/user";
+import { formatToken, getToken } from "@/utils/auth";
 import Axios, {
   type AxiosInstance,
   type AxiosRequestConfig,
   type CustomParamsSerializer
 } from "axios";
-import type {
-  PureHttpError,
-  RequestMethods,
-  PureHttpResponse,
-  PureHttpRequestConfig
-} from "./types.d";
 import { stringify } from "qs";
 import NProgress from "../progress";
-import { getToken, formatToken } from "@/utils/auth";
-import { useUserStoreHook } from "@/store/modules/user";
+import type {
+  PureHttpError,
+  PureHttpRequestConfig,
+  PureHttpResponse,
+  RequestMethods
+} from "./types.d";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -132,10 +132,16 @@ class PureHttp {
           PureHttp.initConfig.beforeResponseCallback(response);
           return response.data;
         }
+
+        if (response.data.code != 200) {
+          // 请求成功 返回服务端错误的消息
+          console.log("🍝[response.data]:", response, response.data);
+        }
         return response.data;
       },
       (error: PureHttpError) => {
         const $error = error;
+
         $error.isCancelRequest = Axios.isCancel($error);
         // 关闭进度条动画
         NProgress.done();

@@ -1,27 +1,27 @@
-import {
-  type RouterHistory,
-  type RouteRecordRaw,
-  type RouteComponent,
-  createWebHistory,
-  createWebHashHistory
-} from "vue-router";
-import { router } from "./index";
-import { isProxy, toRaw } from "vue";
-import { useTimeoutFn } from "@vueuse/core";
-import {
-  isString,
-  cloneDeep,
-  isAllEmpty,
-  intersection,
-  storageLocal,
-  isIncludeAllChildren
-} from "@pureadmin/utils";
 import { getConfig } from "@/config";
 import type { menuType } from "@/layout/types";
-import { buildHierarchyTree } from "@/utils/tree";
-import { userKey, type DataInfo } from "@/utils/auth";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import { userKey, type DataInfo } from "@/utils/auth";
+import { buildHierarchyTree } from "@/utils/tree";
+import {
+  cloneDeep,
+  intersection,
+  isAllEmpty,
+  isIncludeAllChildren,
+  isString,
+  storageLocal
+} from "@pureadmin/utils";
+import { useTimeoutFn } from "@vueuse/core";
+import { isProxy, toRaw } from "vue";
+import {
+  createWebHashHistory,
+  createWebHistory,
+  type RouteComponent,
+  type RouteRecordRaw,
+  type RouterHistory
+} from "vue-router";
+import { router } from "./index";
 const IFrame = () => import("@/layout/frameView.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
@@ -183,18 +183,24 @@ function handleAsyncRoutes(routeList) {
 
 /** 初始化路由（`new Promise` 写法防止在异步请求中造成无限循环）*/
 function initRouter() {
+  //根据当前角色ID 查询
+  const currRole = storageLocal().getItem("user-info") as any;
+  let params = { id: currRole.roles[0] };
+
   if (getConfig()?.CachingAsyncRoutes) {
     // 开启动态路由缓存本地localStorage
     const key = "async-routes";
     const asyncRouteList = storageLocal().getItem(key) as any;
     if (asyncRouteList && asyncRouteList?.length > 0) {
       return new Promise(resolve => {
+        console.log("🍎");
         handleAsyncRoutes(asyncRouteList);
         resolve(router);
       });
     } else {
       return new Promise(resolve => {
-        getAsyncRoutes().then(({ data }) => {
+        getAsyncRoutes(params).then(({ data }) => {
+          console.log("🍵");
           handleAsyncRoutes(cloneDeep(data));
           storageLocal().setItem(key, data);
           resolve(router);
@@ -203,8 +209,10 @@ function initRouter() {
     }
   } else {
     return new Promise(resolve => {
-      getAsyncRoutes().then(({ data }) => {
-        handleAsyncRoutes(cloneDeep(data));
+      getAsyncRoutes(params).then(({ data }) => {
+        console.log("🍒");
+
+        handleAsyncRoutes(cloneDeep(changeTree(data)));
         resolve(router);
       });
     });
@@ -366,21 +374,39 @@ function getTopMenu(tag = false): menuType {
   return topMenu;
 }
 
+/** 处理后端返回的 树结构 */
+function changeTree(tree) {
+  return tree.map(item => {
+    item.auths = JSON.parse(item.auths);
+    let { path, name, component, children, ...meta } = item;
+    if (children?.length > 0) {
+      children = changeTree(children);
+    }
+    return {
+      path,
+      name,
+      component,
+      children,
+      meta
+    };
+  });
+}
+
 export {
-  hasAuth,
-  getAuths,
-  ascending,
-  filterTree,
-  initRouter,
-  getTopMenu,
-  addPathMatch,
-  isOneOfArray,
-  getHistoryMode,
   addAsyncRoutes,
-  getParentPaths,
+  addPathMatch,
+  ascending,
+  filterNoPermissionTree,
+  filterTree,
   findRouteByPath,
-  handleAliveRoute,
-  formatTwoStageRoutes,
   formatFlatteningRoutes,
-  filterNoPermissionTree
+  formatTwoStageRoutes,
+  getAuths,
+  getHistoryMode,
+  getParentPaths,
+  getTopMenu,
+  handleAliveRoute,
+  hasAuth,
+  initRouter,
+  isOneOfArray
 };

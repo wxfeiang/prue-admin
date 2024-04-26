@@ -4,6 +4,9 @@ import { baseUrlApi } from "./utils";
 type Result = {
   success: boolean;
   data?: Array<any>;
+  message?: string;
+  status?: number;
+  code?: number;
 };
 
 const captchaImage = baseUrlApi("/base/captchaImage");
