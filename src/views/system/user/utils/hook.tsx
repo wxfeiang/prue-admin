@@ -1,39 +1,40 @@
-import "./reset.css";
-import dayjs from "dayjs";
-import roleForm from "../form/role.vue";
-import editForm from "../form/index.vue";
-import { zxcvbn } from "@zxcvbn-ts/core";
-import { handleTree } from "@/utils/tree";
-import { message } from "@/utils/message";
-import croppingUpload from "../upload.vue";
-import { usePublicHooks } from "../../hooks";
-import { addDialog } from "@/components/ReDialog";
-import type { PaginationProps } from "@pureadmin/table";
-import type { FormItemProps, RoleFormItemProps } from "../utils/types";
-import { hideTextAtIndex, getKeyList, isAllEmpty } from "@pureadmin/utils";
 import {
-  getRoleIds,
+  getAllRoleList,
   getDeptList,
+  getRoleIds,
   getUserList,
-  getAllRoleList
+  getUserStatus
 } from "@/api/system";
+import { addDialog } from "@/components/ReDialog";
+import { message } from "@/utils/message";
+import { handleTree } from "@/utils/tree";
+import type { PaginationProps } from "@pureadmin/table";
+import { getKeyList, hideTextAtIndex, isAllEmpty } from "@pureadmin/utils";
+import { zxcvbn } from "@zxcvbn-ts/core";
+import dayjs from "dayjs";
 import {
   ElForm,
-  ElInput,
   ElFormItem,
-  ElProgress,
-  ElMessageBox
+  ElInput,
+  ElMessageBox,
+  ElProgress
 } from "element-plus";
 import {
-  type Ref,
+  computed,
   h,
+  onMounted,
+  reactive,
   ref,
   toRaw,
   watch,
-  computed,
-  reactive,
-  onMounted
+  type Ref
 } from "vue";
+import { usePublicHooks } from "../../hooks";
+import editForm from "../form/index.vue";
+import roleForm from "../form/role.vue";
+import croppingUpload from "../upload.vue";
+import type { FormItemProps, RoleFormItemProps } from "../utils/types";
+import "./reset.css";
 
 export function useUser(tableRef: Ref, treeRef: Ref) {
   const form = reactive({
@@ -41,7 +42,9 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     deptId: "",
     username: "",
     phone: "",
-    status: ""
+    status: "",
+    currentPage: 1,
+    pageSize: 10
   });
   const formRef = ref();
   const ruleFormRef = ref();
@@ -93,21 +96,21 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       minWidth: 130
     },
     {
-      label: "用户昵称",
-      prop: "nickname",
+      label: "用户姓名",
+      prop: "name",
       minWidth: 130
     },
     {
       label: "性别",
-      prop: "sex",
+      prop: "gender",
       minWidth: 90,
       cellRenderer: ({ row, props }) => (
         <el-tag
           size={props.size}
-          type={row.sex === 1 ? "danger" : null}
+          type={row.gender === 1 ? "danger" : null}
           effect="plain"
         >
-          {row.sex === 1 ? "女" : "男"}
+          {row.gender === 1 ? "女" : "男"}
         </el-tag>
       )
     },
@@ -137,7 +140,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           inactive-text="已停用"
           inline-prompt
           style={switchStyle.value}
-          onChange={() => onChange(scope as any)}
+          onClick={() => onChange(scope as any)}
         />
       )
     },
@@ -195,7 +198,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         draggable: true
       }
     )
-      .then(() => {
+      .then(async () => {
         switchLoadMap.value[index] = Object.assign(
           {},
           switchLoadMap.value[index],
@@ -203,7 +206,12 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
             loading: true
           }
         );
-        setTimeout(() => {
+        let params = {
+          status: row.status,
+          ids: row.id
+        };
+        const { success } = await getUserStatus(params);
+        if (success) {
           switchLoadMap.value[index] = Object.assign(
             {},
             switchLoadMap.value[index],
@@ -214,7 +222,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
           message("已成功修改用户状态", {
             type: "success"
           });
-        }, 300);
+        }
       })
       .catch(() => {
         row.status === 0 ? (row.status = 1) : (row.status = 0);
@@ -232,10 +240,14 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
 
   function handleSizeChange(val: number) {
     console.log(`${val} items per page`);
+    form.pageSize = val;
+    onSearch(); // 刷新表格数据
   }
 
   function handleCurrentChange(val: number) {
     console.log(`current page: ${val}`);
+    form.currentPage = val;
+    onSearch(); // 刷新表格数据
   }
 
   /** 当CheckBox选择项发生变化时会触发该事件 */
@@ -309,7 +321,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         formInline: {
           title,
           higherDeptOptions: formatHigherDeptOptions(higherDeptOptions.value),
-          parentId: row?.dept.id ?? 0,
+          parentId: row?.dept?.id ?? 0,
           nickname: row?.nickname ?? "",
           username: row?.username ?? "",
           password: row?.password ?? "",
