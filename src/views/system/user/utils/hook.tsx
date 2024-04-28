@@ -5,13 +5,26 @@ import {
   getUserList,
   getUserStatus
 } from "@/api/system";
+import userAvatar from "@/assets/user.jpg";
+import ReCropperPreview from "@/components/ReCropperPreview";
 import { addDialog } from "@/components/ReDialog";
 import { message } from "@/utils/message";
 import { handleTree } from "@/utils/tree";
 import type { PaginationProps } from "@pureadmin/table";
-import { getKeyList, hideTextAtIndex, isAllEmpty } from "@pureadmin/utils";
+import {
+  deviceDetection,
+  getKeyList,
+  hideTextAtIndex,
+  isAllEmpty
+} from "@pureadmin/utils";
 import { zxcvbn } from "@zxcvbn-ts/core";
 import dayjs from "dayjs";
+import { usePublicHooks } from "../../hooks";
+import editForm from "../form/index.vue";
+import roleForm from "../form/role.vue";
+import type { FormItemProps, RoleFormItemProps } from "../utils/types";
+import "./reset.css";
+
 import {
   ElForm,
   ElFormItem,
@@ -29,11 +42,6 @@ import {
   watch,
   type Ref
 } from "vue";
-import { usePublicHooks } from "../../hooks";
-import editForm from "../form/index.vue";
-import roleForm from "../form/role.vue";
-import croppingUpload from "../upload.vue";
-import type { FormItemProps, RoleFormItemProps } from "../utils/types";
 import "./reset.css";
 
 export function useUser(tableRef: Ref, treeRef: Ref) {
@@ -83,8 +91,8 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         <el-image
           fit="cover"
           preview-teleported={true}
-          src={row.avatar}
-          preview-src-list={Array.of(row.avatar)}
+          src={row.avatar || userAvatar}
+          preview-src-list={Array.of(row.avatar || userAvatar)}
           class="w-[24px] h-[24px] rounded-full align-middle"
         />
       ),
@@ -334,6 +342,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       },
       width: "46%",
       draggable: true,
+      fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(editForm, { ref: formRef }),
@@ -370,12 +379,12 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     addDialog({
       title: "裁剪、上传头像",
       width: "40%",
-      draggable: true,
       closeOnClickModal: false,
+      fullscreen: deviceDetection(),
       contentRenderer: () =>
-        h(croppingUpload, {
+        h(ReCropperPreview, {
           ref: cropRef,
-          imgSrc: row.avatar,
+          imgSrc: row.avatar || userAvatar,
           onCropper: info => (avatarInfo.value = info)
         }),
       beforeSure: done => {
@@ -401,6 +410,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       width: "30%",
       draggable: true,
       closeOnClickModal: false,
+      fullscreen: deviceDetection(),
       contentRenderer: () => (
         <>
           <ElForm ref={ruleFormRef} model={pwdForm}>
@@ -483,6 +493,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       },
       width: "400px",
       draggable: true,
+      fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
       contentRenderer: () => h(roleForm),
@@ -519,6 +530,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     selectedNum,
     pagination,
     buttonClass,
+    deviceDetection,
     onSearch,
     resetForm,
     onbatchDel,

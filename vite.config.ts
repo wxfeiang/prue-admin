@@ -6,7 +6,7 @@ import {
   alias,
   pathResolve,
   root,
-  warpperEnv
+  wrapperEnv
 } from "./build/utils";
 
 export default ({ mode }: ConfigEnv): UserConfigExport => {
@@ -17,7 +17,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     VITE_PUBLIC_PATH,
     VITE_BASE_API,
     VITE_BASE_URL
-  } = warpperEnv(loadEnv(mode, root));
+  } = wrapperEnv(loadEnv(mode, root));
   return {
     base: VITE_PUBLIC_PATH,
     root,

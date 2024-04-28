@@ -9,9 +9,9 @@ export default defineFakeRoute([
     response: ({ body }) => {
       let list = [
         {
-          username: "admin",
-          nickname: "admin",
           avatar: "https://avatars.githubusercontent.com/u/44761321",
+          username: "admin",
+          nickname: "小铭",
           phone: "15888886789",
           email: faker.internet.email(),
           sex: 0,
@@ -27,9 +27,9 @@ export default defineFakeRoute([
           createTime: 1605456000000
         },
         {
-          username: "common",
-          nickname: "common",
           avatar: "https://avatars.githubusercontent.com/u/52823142",
+          username: "common",
+          nickname: "小林",
           phone: "18288882345",
           email: faker.internet.email(),
           sex: 1,
@@ -140,6 +140,234 @@ export default defineFakeRoute([
       };
     }
   },
+  // 角色管理-权限-菜单权限
+  {
+    url: "/role-menu",
+    method: "post",
+    response: () => {
+      return {
+        success: true,
+        data: [
+          // 外部页面
+          {
+            parentId: 0,
+            id: 100,
+            menuType: 0, // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
+            title: "menus.pureExternalPage"
+          },
+          {
+            parentId: 100,
+            id: 101,
+            menuType: 0,
+            title: "menus.pureExternalDoc"
+          },
+          {
+            parentId: 101,
+            id: 102,
+            menuType: 2,
+            title: "menus.pureExternalLink"
+          },
+          {
+            parentId: 101,
+            id: 103,
+            menuType: 2,
+            title: "menus.pureUtilsLink"
+          },
+          {
+            parentId: 100,
+            id: 104,
+            menuType: 1,
+            title: "menus.pureEmbeddedDoc"
+          },
+          {
+            parentId: 104,
+            id: 105,
+            menuType: 1,
+            title: "menus.pureEpDoc"
+          },
+          {
+            parentId: 104,
+            id: 106,
+            menuType: 1,
+            title: "menus.pureTailwindcssDoc"
+          },
+          {
+            parentId: 104,
+            id: 107,
+            menuType: 1,
+            title: "menus.pureVueDoc"
+          },
+          {
+            parentId: 104,
+            id: 108,
+            menuType: 1,
+            title: "menus.pureViteDoc"
+          },
+          {
+            parentId: 104,
+            id: 109,
+            menuType: 1,
+            title: "menus.purePiniaDoc"
+          },
+          {
+            parentId: 104,
+            id: 110,
+            menuType: 1,
+            title: "menus.pureRouterDoc"
+          },
+          // 权限管理
+          {
+            parentId: 0,
+            id: 200,
+            menuType: 0,
+            title: "menus.purePermission"
+          },
+          {
+            parentId: 200,
+            id: 201,
+            menuType: 0,
+            title: "menus.purePermissionPage"
+          },
+          {
+            parentId: 200,
+            id: 202,
+            menuType: 0,
+            title: "menus.purePermissionButton"
+          },
+          {
+            parentId: 202,
+            id: 203,
+            menuType: 3,
+            title: "添加"
+          },
+          {
+            parentId: 202,
+            id: 204,
+            menuType: 3,
+            title: "修改"
+          },
+          {
+            parentId: 202,
+            id: 205,
+            menuType: 3,
+            title: "删除"
+          },
+          // 系统管理
+          {
+            parentId: 0,
+            id: 300,
+            menuType: 0,
+            title: "menus.pureSysManagement"
+          },
+          {
+            parentId: 300,
+            id: 301,
+            menuType: 0,
+            title: "menus.pureUser"
+          },
+          {
+            parentId: 300,
+            id: 302,
+            menuType: 0,
+            title: "menus.pureRole"
+          },
+          {
+            parentId: 300,
+            id: 303,
+            menuType: 0,
+            title: "menus.pureSystemMenu"
+          },
+          {
+            parentId: 300,
+            id: 304,
+            menuType: 0,
+            title: "menus.pureDept"
+          },
+          // 系统监控
+          {
+            parentId: 0,
+            id: 400,
+            menuType: 0,
+            title: "menus.pureSysMonitor"
+          },
+          {
+            parentId: 400,
+            id: 401,
+            menuType: 0,
+            title: "menus.pureOnlineUser"
+          },
+          {
+            parentId: 400,
+            id: 402,
+            menuType: 0,
+            title: "menus.pureLoginLog"
+          },
+          {
+            parentId: 400,
+            id: 403,
+            menuType: 0,
+            title: "menus.pureOperationLog"
+          },
+          {
+            parentId: 400,
+            id: 404,
+            menuType: 0,
+            title: "menus.pureSystemLog"
+          },
+          // 标签页操作
+          {
+            parentId: 0,
+            id: 500,
+            menuType: 0,
+            title: "menus.pureTabs"
+          },
+          {
+            parentId: 500,
+            id: 501,
+            menuType: 0,
+            title: "menus.pureTabs"
+          },
+          {
+            parentId: 500,
+            id: 502,
+            menuType: 0,
+            title: "query传参模式"
+          },
+          {
+            parentId: 500,
+            id: 503,
+            menuType: 0,
+            title: "params传参模式"
+          }
+        ]
+      };
+    }
+  },
+  // 角色管理-权限-菜单权限-根据角色 id 查对应菜单
+  {
+    url: "/role-menu-ids",
+    method: "post",
+    response: ({ body }) => {
+      if (body.id == 1) {
+        return {
+          success: true,
+          data: [
+            100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 200, 201,
+            202, 203, 204, 205, 300, 301, 302, 303, 304, 400, 401, 402, 403,
+            404, 500, 501, 502, 503
+          ]
+        };
+      } else if (body.id == 2) {
+        return {
+          success: true,
+          data: [
+            100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 404, 500,
+            501, 502, 503
+          ]
+        };
+      }
+    }
+  },
   // 菜单管理
   {
     url: "/menu",
@@ -153,7 +381,7 @@ export default defineFakeRoute([
             parentId: 0,
             id: 100,
             menuType: 0, // 菜单类型（0代表菜单、1代表iframe、2代表外链、3代表按钮）
-            title: "menus.hsExternalPage",
+            title: "menus.pureExternalPage",
             name: "PureIframe",
             path: "/iframe",
             component: "",
@@ -169,6 +397,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -176,7 +405,7 @@ export default defineFakeRoute([
             parentId: 100,
             id: 101,
             menuType: 0,
-            title: "menus.hsExternalDoc",
+            title: "menus.pureExternalDoc",
             name: "PureIframeExternal",
             path: "/iframe/external",
             component: "",
@@ -192,6 +421,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -199,7 +429,7 @@ export default defineFakeRoute([
             parentId: 101,
             id: 102,
             menuType: 2,
-            title: "menus.externalLink",
+            title: "menus.pureExternalLink",
             name: "https://yiming_chang.gitee.io/pure-admin-doc",
             path: "/external",
             component: "",
@@ -215,6 +445,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -222,9 +453,9 @@ export default defineFakeRoute([
             parentId: 101,
             id: 103,
             menuType: 2,
-            title: "menus.pureutilsLink",
+            title: "menus.pureUtilsLink",
             name: "https://pure-admin-utils.netlify.app/",
-            path: "/pureutilsLink",
+            path: "/pureUtilsLink",
             component: "",
             rank: null,
             redirect: "",
@@ -238,6 +469,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -245,7 +477,7 @@ export default defineFakeRoute([
             parentId: 100,
             id: 104,
             menuType: 1,
-            title: "menus.hsEmbeddedDoc",
+            title: "menus.pureEmbeddedDoc",
             name: "PureIframeEmbedded",
             path: "/iframe/embedded",
             component: "",
@@ -261,6 +493,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -268,7 +501,7 @@ export default defineFakeRoute([
             parentId: 104,
             id: 105,
             menuType: 1,
-            title: "menus.hsEpDocument",
+            title: "menus.pureEpDoc",
             name: "FrameEp",
             path: "/iframe/ep",
             component: "",
@@ -284,6 +517,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: true,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -291,7 +525,7 @@ export default defineFakeRoute([
             parentId: 104,
             id: 106,
             menuType: 1,
-            title: "menus.hsTailwindcssDocument",
+            title: "menus.pureTailwindcssDoc",
             name: "FrameTailwindcss",
             path: "/iframe/tailwindcss",
             component: "",
@@ -307,6 +541,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: true,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -314,7 +549,7 @@ export default defineFakeRoute([
             parentId: 104,
             id: 107,
             menuType: 1,
-            title: "menus.hsVueDocument",
+            title: "menus.pureVueDoc",
             name: "FrameVue",
             path: "/iframe/vue3",
             component: "",
@@ -330,6 +565,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: true,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -337,7 +573,7 @@ export default defineFakeRoute([
             parentId: 104,
             id: 108,
             menuType: 1,
-            title: "menus.hsViteDocument",
+            title: "menus.pureViteDoc",
             name: "FrameVite",
             path: "/iframe/vite",
             component: "",
@@ -353,6 +589,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: true,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -360,7 +597,7 @@ export default defineFakeRoute([
             parentId: 104,
             id: 109,
             menuType: 1,
-            title: "menus.hsPiniaDocument",
+            title: "menus.purePiniaDoc",
             name: "FramePinia",
             path: "/iframe/pinia",
             component: "",
@@ -376,6 +613,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: true,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -383,7 +621,7 @@ export default defineFakeRoute([
             parentId: 104,
             id: 110,
             menuType: 1,
-            title: "menus.hsRouterDocument",
+            title: "menus.pureRouterDoc",
             name: "FrameRouter",
             path: "/iframe/vue-router",
             component: "",
@@ -399,6 +637,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: true,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -407,7 +646,7 @@ export default defineFakeRoute([
             parentId: 0,
             id: 200,
             menuType: 0,
-            title: "menus.permission",
+            title: "menus.purePermission",
             name: "PurePermission",
             path: "/permission",
             component: "",
@@ -423,6 +662,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -430,7 +670,7 @@ export default defineFakeRoute([
             parentId: 200,
             id: 201,
             menuType: 0,
-            title: "menus.permissionPage",
+            title: "menus.purePermissionPage",
             name: "PermissionPage",
             path: "/permission/page/index",
             component: "",
@@ -446,6 +686,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -453,7 +694,7 @@ export default defineFakeRoute([
             parentId: 200,
             id: 202,
             menuType: 0,
-            title: "menus.permissionButton",
+            title: "menus.purePermissionButton",
             name: "PermissionButton",
             path: "/permission/button/index",
             component: "",
@@ -469,6 +710,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -492,6 +734,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -515,6 +758,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -538,6 +782,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -546,7 +791,7 @@ export default defineFakeRoute([
             parentId: 0,
             id: 300,
             menuType: 0,
-            title: "menus.hssysManagement",
+            title: "menus.pureSysManagement",
             name: "PureSystem",
             path: "/system",
             component: "",
@@ -562,6 +807,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -569,7 +815,7 @@ export default defineFakeRoute([
             parentId: 300,
             id: 301,
             menuType: 0,
-            title: "menus.hsUser",
+            title: "menus.pureUser",
             name: "SystemUser",
             path: "/system/user/index",
             component: "",
@@ -585,6 +831,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -592,7 +839,7 @@ export default defineFakeRoute([
             parentId: 300,
             id: 302,
             menuType: 0,
-            title: "menus.hsRole",
+            title: "menus.pureRole",
             name: "SystemRole",
             path: "/system/role/index",
             component: "",
@@ -608,6 +855,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -615,7 +863,7 @@ export default defineFakeRoute([
             parentId: 300,
             id: 303,
             menuType: 0,
-            title: "menus.hsSystemMenu",
+            title: "menus.pureSystemMenu",
             name: "SystemMenu",
             path: "/system/menu/index",
             component: "",
@@ -631,6 +879,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -638,7 +887,7 @@ export default defineFakeRoute([
             parentId: 300,
             id: 304,
             menuType: 0,
-            title: "menus.hsDept",
+            title: "menus.pureDept",
             name: "SystemDept",
             path: "/system/dept/index",
             component: "",
@@ -654,6 +903,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -662,7 +912,7 @@ export default defineFakeRoute([
             parentId: 0,
             id: 400,
             menuType: 0,
-            title: "menus.hssysMonitor",
+            title: "menus.pureSysMonitor",
             name: "PureMonitor",
             path: "/monitor",
             component: "",
@@ -678,6 +928,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -685,7 +936,7 @@ export default defineFakeRoute([
             parentId: 400,
             id: 401,
             menuType: 0,
-            title: "menus.hsOnlineUser",
+            title: "menus.pureOnlineUser",
             name: "OnlineUser",
             path: "/monitor/online-user",
             component: "monitor/online/index",
@@ -701,6 +952,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -708,7 +960,7 @@ export default defineFakeRoute([
             parentId: 400,
             id: 402,
             menuType: 0,
-            title: "menus.hsLoginLog",
+            title: "menus.pureLoginLog",
             name: "LoginLog",
             path: "/monitor/login-logs",
             component: "monitor/logs/login/index",
@@ -724,6 +976,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -731,7 +984,7 @@ export default defineFakeRoute([
             parentId: 400,
             id: 403,
             menuType: 0,
-            title: "menus.hsOperationLog",
+            title: "menus.pureOperationLog",
             name: "OperationLog",
             path: "/monitor/operation-logs",
             component: "monitor/logs/operation/index",
@@ -747,6 +1000,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -754,7 +1008,7 @@ export default defineFakeRoute([
             parentId: 400,
             id: 404,
             menuType: 0,
-            title: "menus.hsSystemLog",
+            title: "menus.pureSystemLog",
             name: "SystemLog",
             path: "/monitor/system-logs",
             component: "monitor/logs/system/index",
@@ -770,6 +1024,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -778,7 +1033,7 @@ export default defineFakeRoute([
             parentId: 0,
             id: 500,
             menuType: 0,
-            title: "menus.hstabs",
+            title: "menus.pureTabs",
             name: "PureTabs",
             path: "/tabs",
             component: "",
@@ -794,6 +1049,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -801,7 +1057,7 @@ export default defineFakeRoute([
             parentId: 500,
             id: 501,
             menuType: 0,
-            title: "menus.hstabs",
+            title: "menus.pureTabs",
             name: "Tabs",
             path: "/tabs/index",
             component: "",
@@ -817,6 +1073,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: true,
             showParent: false
           },
@@ -840,6 +1097,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: false,
             showParent: false
           },
@@ -863,6 +1121,7 @@ export default defineFakeRoute([
             frameLoading: true,
             keepAlive: false,
             hiddenTag: false,
+            fixedTag: false,
             showLink: false,
             showParent: false
           }
@@ -1228,7 +1487,7 @@ export default defineFakeRoute([
                 parentId: 0,
                 id: 400,
                 menuType: 0,
-                title: "menus.hssysMonitor",
+                title: "menus.pureSysMonitor",
                 name: "PureMonitor",
                 path: "/monitor",
                 component: "",
@@ -1244,6 +1503,7 @@ export default defineFakeRoute([
                 frameLoading: true,
                 keepAlive: false,
                 hiddenTag: false,
+                fixedTag: false,
                 showLink: true,
                 showParent: false
               },
@@ -1251,7 +1511,7 @@ export default defineFakeRoute([
                 parentId: 400,
                 id: 401,
                 menuType: 0,
-                title: "menus.hsOnlineUser",
+                title: "menus.pureOnlineUser",
                 name: "OnlineUser",
                 path: "/monitor/online-user",
                 component: "monitor/online/index",
@@ -1267,6 +1527,7 @@ export default defineFakeRoute([
                 frameLoading: true,
                 keepAlive: false,
                 hiddenTag: false,
+                fixedTag: false,
                 showLink: true,
                 showParent: false
               },
@@ -1274,7 +1535,7 @@ export default defineFakeRoute([
                 parentId: 400,
                 id: 402,
                 menuType: 0,
-                title: "menus.hsLoginLog",
+                title: "menus.pureLoginLog",
                 name: "LoginLog",
                 path: "/monitor/login-logs",
                 component: "monitor/logs/login/index",
@@ -1290,6 +1551,7 @@ export default defineFakeRoute([
                 frameLoading: true,
                 keepAlive: false,
                 hiddenTag: false,
+                fixedTag: false,
                 showLink: true,
                 showParent: false
               },
@@ -1297,7 +1559,7 @@ export default defineFakeRoute([
                 parentId: 400,
                 id: 403,
                 menuType: 0,
-                title: "menus.hsOperationLog",
+                title: "menus.pureOperationLog",
                 name: "OperationLog",
                 path: "/monitor/operation-logs",
                 component: "monitor/logs/operation/index",
@@ -1313,6 +1575,7 @@ export default defineFakeRoute([
                 frameLoading: true,
                 keepAlive: false,
                 hiddenTag: false,
+                fixedTag: false,
                 showLink: true,
                 showParent: false
               },
@@ -1320,7 +1583,7 @@ export default defineFakeRoute([
                 parentId: 400,
                 id: 404,
                 menuType: 0,
-                title: "menus.hsSystemLog",
+                title: "menus.pureSystemLog",
                 name: "SystemLog",
                 path: "/monitor/system-logs",
                 component: "monitor/logs/system/index",
@@ -1336,6 +1599,7 @@ export default defineFakeRoute([
                 frameLoading: true,
                 keepAlive: false,
                 hiddenTag: false,
+                fixedTag: false,
                 showLink: true,
                 showParent: false
               }

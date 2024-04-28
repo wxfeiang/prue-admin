@@ -16,15 +16,30 @@ import type { FormInstance } from "element-plus";
 import { computed, reactive, ref, toRaw, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import phone from "./components/phone.vue";
-import qrCode from "./components/qrCode.vue";
-import regist from "./components/regist.vue";
-import update from "./components/update.vue";
-import { operates, thirdParty } from "./utils/enums";
-import Motion from "./utils/motion";
+import { message } from "@/utils/message";
 import { loginRules } from "./utils/rule";
-import { avatar, bg, illustration } from "./utils/static";
+import TypeIt from "@/components/ReTypeit";
+import { debounce } from "@pureadmin/utils";
+import { useNav } from "@/layout/hooks/useNav";
+import { useEventListener } from "@vueuse/core";
+import type { FormInstance } from "element-plus";
+import { $t, transformI18n } from "@/plugins/i18n";
+import { operates, thirdParty } from "./utils/enums";
+import { useLayout } from "@/layout/hooks/useLayout";
+import LoginPhone from "./components/LoginPhone.vue";
+import LoginRegist from "./components/LoginRegist.vue";
+import LoginUpdate from "./components/LoginUpdate.vue";
+import LoginQrCode from "./components/LoginQrCode.vue";
+import { useUserStoreHook } from "@/store/modules/user";
+import { initRouter, getTopMenu } from "@/router/utils";
+import { bg, avatar, illustration } from "./utils/static";
+import { ReImageVerify } from "@/components/ReImageVerify";
+import { ref, toRaw, reactive, watch, computed } from "vue";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
+import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
+import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import dayIcon from "@/assets/svg/day.svg?component";
 import globalization from "@/assets/svg/globalization.svg?component";
@@ -80,10 +95,12 @@ const onLogin = async (formEl: FormInstance | undefined) => {
               router
                 .push(getTopMenu(true).path)
                 .then(() => {
-                  message("登录成功", { type: "success" });
+                  message(t("login.pureLoginSuccess"), { type: "success" });
                 })
                 .finally(() => (disabled.value = false));
             });
+          } else {
+            message(t("login.pureLoginFail"), { type: "error" });
           }
         })
         .finally(() => {
@@ -189,7 +206,7 @@ watch(loginDay, value => {
                 :rules="[
                   {
                     required: true,
-                    message: transformI18n($t('login.usernameReg')),
+                    message: transformI18n($t('login.pureUsernameReg')),
                     trigger: 'blur'
                   }
                 ]"
@@ -198,7 +215,7 @@ watch(loginDay, value => {
                 <el-input
                   v-model="ruleForm.username"
                   clearable
-                  :placeholder="t('login.username')"
+                  :placeholder="t('login.pureUsername')"
                   :prefix-icon="useRenderIcon(User)"
                 />
               </el-form-item>
@@ -210,7 +227,7 @@ watch(loginDay, value => {
                   v-model="ruleForm.password"
                   clearable
                   show-password
-                  :placeholder="t('login.password')"
+                  :placeholder="t('login.purePassword')"
                   :prefix-icon="useRenderIcon(Lock)"
                 />
               </el-form-item>
@@ -221,7 +238,7 @@ watch(loginDay, value => {
                 <el-input
                   v-model="ruleForm.verifyCode"
                   clearable
-                  :placeholder="t('login.verifyCode')"
+                  :placeholder="t('login.pureVerifyCode')"
                   :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
                 >
                   <template v-slot:append>
@@ -249,14 +266,15 @@ watch(loginDay, value => {
                         <option value="7">7</option>
                         <option value="30">30</option>
                       </select>
-                      {{ t("login.remember") }}
-                      <el-tooltip
-                        effect="dark"
-                        placement="top"
-                        :content="t('login.rememberInfo')"
-                      >
-                        <IconifyIconOffline :icon="Info" class="ml-1" />
-                      </el-tooltip>
+                      {{ t("login.pureRemember") }}
+                      <IconifyIconOffline
+                        v-tippy="{
+                          content: t('login.pureRememberInfo'),
+                          placement: 'top'
+                        }"
+                        :icon="Info"
+                        class="ml-1"
+                      />
                     </span>
                   </el-checkbox>
                   <el-button
@@ -264,7 +282,7 @@ watch(loginDay, value => {
                     type="primary"
                     @click="useUserStoreHook().SET_CURRENTPAGE(4)"
                   >
-                    {{ t("login.forget") }}
+                    {{ t("login.pureForget") }}
                   </el-button>
                 </div>
                 <el-button
@@ -275,7 +293,7 @@ watch(loginDay, value => {
                   :disabled="disabled"
                   @click="onLogin(ruleFormRef)"
                 >
-                  {{ t("login.login") }}
+                  {{ t("login.pureLogin") }}
                 </el-button>
               </el-form-item>
             </Motion>
@@ -300,7 +318,9 @@ watch(loginDay, value => {
           <Motion v-if="currentPage === 0" :delay="350">
             <el-form-item>
               <el-divider>
-                <p class="text-gray-500 text-xs">{{ t("login.thirdLogin") }}</p>
+                <p class="text-gray-500 text-xs">
+                  {{ t("login.pureThirdLogin") }}
+                </p>
               </el-divider>
               <div class="w-full flex justify-evenly">
                 <span
@@ -318,13 +338,13 @@ watch(loginDay, value => {
             </el-form-item>
           </Motion>
           <!-- 手机号登录 -->
-          <phone v-if="currentPage === 1" />
+          <LoginPhone v-if="currentPage === 1" />
           <!-- 二维码登录 -->
-          <qrCode v-if="currentPage === 2" />
+          <LoginQrCode v-if="currentPage === 2" />
           <!-- 注册 -->
-          <regist v-if="currentPage === 3" />
+          <LoginRegist v-if="currentPage === 3" />
           <!-- 忘记密码 -->
-          <update v-if="currentPage === 4" />
+          <LoginUpdate v-if="currentPage === 4" />
         </div>
       </div>
     </div>

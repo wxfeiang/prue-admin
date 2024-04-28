@@ -1,3 +1,82 @@
+# 5.4.0 (2024-04-18)
+
+### 🎫 Feat
+
+- Add global disabled attribute `disabled` to `ReSegmented` component
+- Added mind map examples
+- Functional pop-up box `ReDialog` adds `Popconfirm` bubble confirmation box
+- `pure-table` adds `headerSlot` custom header slot usage example
+- The route adds a configurable `fixedTag` attribute, which determines whether the current menu name is fixedly displayed on the tab and cannot be closed.
+- Added account setting function page and compatible with mobile terminals
+- Upgrade `eslint9` and related compatibility processing
+- Added global configuration `MaxTagsLevel` property to set the maximum number of open tabs
+- Full coverage of the internationalization of the core code of the framework (only the internationalization of the business code needs to be processed)
+
+### 🐞 Bug fixes
+
+- Fixed the issue where columns cannot be dragged normally when there are multiple `RePureTableBar` components on a page
+- Fixed the problem of icon display style after the third-level menu is folded to the left
+- Fixed the issue where the font color does not take effect after refreshing the account settings page
+- Fixed the issue where the `refreshToken` parameter is empty when calling the refresh `token` interface
+
+### 🍏 Perf
+
+- Optimize login interface
+- Optimize the logic of obtaining the top menu
+- Optimize request whitelist logic and be compatible with more scenarios
+- Simplified export and import usage in `store` files
+- Removed unnecessary `cloc` tool dependency package, which uses the `GPL` open source license and is controversial
+- Optimize the types of `post` and `get` utility functions in `src/utils/http` files
+
+# 5.3.0 (2024-03-28)
+
+### ✔️ refactor
+
+- Reconstruct internationalized file naming conventions and demo pages with code location hints
+
+### 🎫 Feat
+
+- Add `MQTT` example
+- Added `docx` and `excel` file preview examples
+- The `ReSegmented` segmented controller has a new `size` attribute, which can set three sizes
+- The `RePureTableBar` component and `pure-admin-table` support international switching of table headers
+
+# 5.2.0 (2024-03-22)
+
+### ✔️ refactor
+
+- Place the full screen button at the top to make it visible and easy to operate
+
+### 🎫 Feat
+
+- Added `v-ripple` command (water ripple effect)
+- Add global `Stretch` configuration to the content area to customize compact pages and easily find the required information
+- Added roaming guidance based on `ElTour`
+- Improve role management-menu permission function, novel interactive experience
+- Add system monitoring-online users
+- Add system monitoring-login log
+- Add system monitoring-operation log
+- Add system monitoring-system log
+- Add more more convenient `pure-admin-table` editable table examples (overall editing, single row editing, cell editing)
+- The `ReSegmented` component has a new `block` attribute to make it fit the width of the parent element
+- Add [vue-flow](https://vueflow.dev/) flow chart example
+- Add virtual table example
+- Added Gantt chart example
+- Add graphic verification code example
+- Add form examples, which can be generated through `JSON` format configuration (basic form, pop-up form, drawer form, step-by-step form, search form)
+- Add a folding and expanding menu function on the middle right side of the left menu
+
+### 🐞 Bug fixes
+
+- Fixed the scroll bar issue when clicking on the registration page under `windwos`
+- Fixed the problem of scroll bars appearing in the content area when switching pages under `windows`
+- Fixed the problem of status style disappearing in `pure-table` with status table under dark overall style
+- Fixed the problem of turning on the gray mode and dark overall style in the project configuration and refreshing the overall style of the page.
+
+### 🍏 Perf
+
+- All pages of system management and system monitoring are compatible with mobile terminals
+
 # 5.1.0 (2024-03-02)
 
 ### ✔️ refactor
