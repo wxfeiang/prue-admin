@@ -12,7 +12,7 @@ npm-debug.log*
 .pnpm-error.log*
 .pnpm-debug.log
 tests/**/coverage/
-
+pnpm-lock.yaml
 # Editor directories and files
 .idea
 *.suo
