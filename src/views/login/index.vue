@@ -16,30 +16,15 @@ import type { FormInstance } from "element-plus";
 import { computed, reactive, ref, toRaw, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-import { message } from "@/utils/message";
-import { loginRules } from "./utils/rule";
-import TypeIt from "@/components/ReTypeit";
-import { debounce } from "@pureadmin/utils";
-import { useNav } from "@/layout/hooks/useNav";
-import { useEventListener } from "@vueuse/core";
-import type { FormInstance } from "element-plus";
-import { $t, transformI18n } from "@/plugins/i18n";
-import { operates, thirdParty } from "./utils/enums";
-import { useLayout } from "@/layout/hooks/useLayout";
 import LoginPhone from "./components/LoginPhone.vue";
+import LoginQrCode from "./components/LoginQrCode.vue";
 import LoginRegist from "./components/LoginRegist.vue";
 import LoginUpdate from "./components/LoginUpdate.vue";
-import LoginQrCode from "./components/LoginQrCode.vue";
-import { useUserStoreHook } from "@/store/modules/user";
-import { initRouter, getTopMenu } from "@/router/utils";
-import { bg, avatar, illustration } from "./utils/static";
-import { ReImageVerify } from "@/components/ReImageVerify";
-import { ref, toRaw, reactive, watch, computed } from "vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { useTranslationLang } from "@/layout/hooks/useTranslationLang";
-import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { operates, thirdParty } from "./utils/enums";
+import Motion from "./utils/motion";
+import { loginRules } from "./utils/rule";
+import { avatar, bg, illustration } from "./utils/static";
 
-import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import dayIcon from "@/assets/svg/day.svg?component";
 import globalization from "@/assets/svg/globalization.svg?component";
@@ -82,11 +67,8 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       loading.value = true;
-      let params = {
-        ...ruleForm
-      };
       useUserStoreHook()
-        .loginByUsername(params)
+        .loginByUsername(ruleForm)
         .then(res => {
           if (res.success) {
             // 获取后端路由
@@ -103,9 +85,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
             message(t("login.pureLoginFail"), { type: "error" });
           }
         })
-        .finally(() => {
-          loading.value = false;
-        });
+        .finally(() => (loading.value = false));
     } else {
       return fields;
     }
@@ -242,7 +222,7 @@ watch(loginDay, value => {
                   :prefix-icon="useRenderIcon('ri:shield-keyhole-line')"
                 >
                   <template v-slot:append>
-                    <ReImageVerify v-model:code="imgCode" :remote="true" />
+                    <ReImageVerify v-model:code="imgCode" remote />
                   </template>
                 </el-input>
               </el-form-item>

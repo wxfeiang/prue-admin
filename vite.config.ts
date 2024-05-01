@@ -34,7 +34,14 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
           // 这里填写后端地址
           target: VITE_BASE_URL,
           changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, "")
+          bypass(req, res, options: any) {
+            const proxyURL = options.target + options.rewrite(req.url);
+            console.log("proxyURL", proxyURL);
+            req.headers["x-req-proxyURL"] = proxyURL; // 设置未生效
+            res.setHeader("x-req-proxyURL", proxyURL); // 设置响应头可以看到
+          },
+          rewrite: path =>
+            path.replace(new RegExp(`^${VITE_BASE_API}`), VITE_BASE_API)
         }
       },
       // 预热文件以提前转换和缓存结果，降低启动期间的初始页面加载时长并防止转换瀑布
