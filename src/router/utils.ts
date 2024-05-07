@@ -1,28 +1,27 @@
-import { getConfig } from "@/config";
-import { routerArrays, type menuType } from "@/layout/types";
-import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
-import { usePermissionStoreHook } from "@/store/modules/permission";
-import { userKey, type DataInfo } from "@/utils/auth";
-import { buildHierarchyTree } from "@/utils/tree";
-
 import {
-  cloneDeep,
-  intersection,
-  isAllEmpty,
-  isIncludeAllChildren,
-  isString,
-  storageLocal
-} from "@pureadmin/utils";
-import { useTimeoutFn } from "@vueuse/core";
-import { isProxy, toRaw } from "vue";
-import {
-  createWebHashHistory,
-  createWebHistory,
-  type RouteComponent,
+  type RouterHistory,
   type RouteRecordRaw,
-  type RouterHistory
+  type RouteComponent,
+  createWebHistory,
+  createWebHashHistory
 } from "vue-router";
 import { router } from "./index";
+import { isProxy, toRaw } from "vue";
+import { useTimeoutFn } from "@vueuse/core";
+import {
+  isString,
+  cloneDeep,
+  isAllEmpty,
+  intersection,
+  storageLocal,
+  isIncludeAllChildren
+} from "@pureadmin/utils";
+import { getConfig } from "@/config";
+import { buildHierarchyTree } from "@/utils/tree";
+import { userKey, type DataInfo } from "@/utils/auth";
+import { type menuType, routerArrays } from "@/layout/types";
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { usePermissionStoreHook } from "@/store/modules/permission";
 const IFrame = () => import("@/layout/frameView.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
