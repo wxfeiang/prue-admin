@@ -1,28 +1,28 @@
-import {
-  type RouterHistory,
-  type RouteRecordRaw,
-  type RouteComponent,
-  createWebHistory,
-  createWebHashHistory
-} from "vue-router";
-import { router } from "./index";
-import { isProxy, toRaw } from "vue";
-import { useTimeoutFn } from "@vueuse/core";
-import {
-  isString,
-  cloneDeep,
-  isAllEmpty,
-  intersection,
-  storageLocal,
-  isIncludeAllChildren
-} from "@pureadmin/utils";
 import { getConfig } from "@/config";
-import { buildHierarchyTree } from "@/utils/tree";
-import { userKey, type DataInfo } from "@/utils/auth";
-import { type menuType, routerArrays } from "@/layout/types";
+import { routerArrays, type menuType } from "@/layout/types";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
-const IFrame = () => import("@/layout/frameView.vue");
+import { userKey, type DataInfo } from "@/utils/auth";
+import { buildHierarchyTree } from "@/utils/tree";
+import {
+  cloneDeep,
+  intersection,
+  isAllEmpty,
+  isIncludeAllChildren,
+  isString,
+  storageLocal
+} from "@pureadmin/utils";
+import { useTimeoutFn } from "@vueuse/core";
+import { isProxy, toRaw } from "vue";
+import {
+  createWebHashHistory,
+  createWebHistory,
+  type RouteComponent,
+  type RouteRecordRaw,
+  type RouterHistory
+} from "vue-router";
+import { router } from "./index";
+const IFrame = () => import("@/layout/frame.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
@@ -399,7 +399,7 @@ function getTopMenu(tag = false): menuType {
 /** 处理后端返回的 树结构 */
 function changeTree(tree) {
   return tree.map(item => {
-    item.auths = JSON.parse(item.auths);
+    item.auths = item?.auths ? JSON.parse(item.auths) : [];
     let { path, name, component, children, ...meta } = item;
     if (children?.length > 0) {
       children = changeTree(children);
