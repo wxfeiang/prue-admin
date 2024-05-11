@@ -180,7 +180,7 @@ export function useRole(treeRef: Ref) {
   }
 
   function handleSelectionChange(val) {
-    console.log("handleSelectionChange", val);
+    console.log("表格多选", val);
   }
 
   async function onSearch() {
@@ -235,9 +235,6 @@ export function useRole(treeRef: Ref) {
         }
         FormRef.validate(async valid => {
           if (valid) {
-            console.log("curData", curData);
-            // 表单规则校验通过
-
             await actionRole(curData);
             chores();
           }
@@ -272,15 +269,12 @@ export function useRole(treeRef: Ref) {
 
   /** 菜单权限-保存 */
   async function handleSave() {
-    const { id, name } = curRow.value;
-    // 根据用户 id 调用实际项目中菜单权限修改接口
-    console.log(id, treeRef.value.getCheckedKeys());
+    const { name } = curRow.value;
     try {
       let params = {
         ...curRow.value,
         roleMenu: treeRef.value.getCheckedKeys()
       };
-      console.log("🍑[params]:", params);
       //TODO: 分派权限
       const { success } = await actionRoleMenuIds(params);
 

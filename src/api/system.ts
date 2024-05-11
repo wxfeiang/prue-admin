@@ -30,6 +30,7 @@ const menuList = baseUrlApi("/menu/list");
 const roleList = baseUrlApi("/role/list");
 const Role = baseUrlApi("/role");
 const getRolePermissions = baseUrlApi("/role/rolePermissions");
+const updateRole = baseUrlApi("/role/updateRole");
 
 /** 获取系统管理-用户管理列表 */
 export const getUserList = (data?: object) => {
@@ -60,7 +61,7 @@ export const getRoleList = (data: object) => {
   return http.request<ResultTable>("post", roleList, { data });
 };
 
-/** 获取系统管理-角色管理列表 */
+/** 获取系统管理-角色新增/编辑 */
 export const actionRole = (data: object) => {
   return http.request<ResultTable>("post", Role, { data });
 };
@@ -81,7 +82,7 @@ export const getRoleMenuIds = (params: object) => {
 
 /** 获取角色管理-权限-角色 -分派权限 */
 export const actionRoleMenuIds = (data: object) => {
-  return http.request<Result>("put", Role, { ...data });
+  return http.request<Result>("put", updateRole, { data });
 };
 
 /** 获取系统管理-菜单树 */
