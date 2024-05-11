@@ -7,6 +7,7 @@ import Axios, {
 } from "axios";
 import { stringify } from "qs";
 import NProgress from "../progress";
+import { checkStatus } from "./checkStatus";
 import type {
   PureHttpError,
   PureHttpRequestConfig,
@@ -132,19 +133,20 @@ class PureHttp {
           PureHttp.initConfig.beforeResponseCallback(response);
           return response.data;
         }
-
         if (response.data.code != 200) {
           // 请求成功 返回服务端错误的消息
-          console.log("🍝[response.data]:", response, response.data);
+          checkStatus(response.data.code, response.data.message);
         }
         return response.data;
       },
       (error: PureHttpError) => {
         const $error = error;
+        console.log("🍤[ $error ]:", $error.message);
 
         $error.isCancelRequest = Axios.isCancel($error);
         // 关闭进度条动画
         NProgress.done();
+        checkStatus($error.response?.status, $error.message);
         // 所有的响应异常 区分来源为取消请求/非取消请求
         return Promise.reject($error);
       }
