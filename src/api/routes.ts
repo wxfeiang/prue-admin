@@ -5,7 +5,7 @@ type Result = {
   success: boolean;
   data: Array<any>;
 };
-const ROUTER = baseUrlApi("/menu/roleMenu");
+const ROUTER = baseUrlApi("/menu/roleMenuTree");
 export const getAsyncRoutes = params => {
   //return http.request<Result>("get", "/get-async-routes");
   return http.request<Result>("get", ROUTER, { params });

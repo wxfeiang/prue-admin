@@ -7,7 +7,7 @@ const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     name: "",
     code: "",
-    remark: ""
+    describe: ""
   })
 });
 
@@ -46,7 +46,7 @@ defineExpose({ getRef });
 
     <el-form-item label="备注">
       <el-input
-        v-model="newFormInline.remark"
+        v-model="newFormInline.describe"
         placeholder="请输入备注信息"
         type="textarea"
       />

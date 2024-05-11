@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { PureTableBar } from "@/components/RePureTableBar";
+import { transformI18n } from "@/plugins/i18n";
 import { ref } from "vue";
 import { useMenu } from "./utils/hook";
-import { transformI18n } from "@/plugins/i18n";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
@@ -61,7 +61,7 @@ const {
     </el-form>
 
     <PureTableBar
-      title="菜单管理（仅演示，操作后不生效）"
+      title="菜单管理"
       :columns="columns"
       :isExpandAll="false"
       :tableRef="tableRef?.getTableRef()"

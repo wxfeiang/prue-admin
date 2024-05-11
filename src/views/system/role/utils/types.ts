@@ -6,7 +6,9 @@ interface FormItemProps {
   /** 角色编号 */
   code: string;
   /** 备注 */
-  remark: string;
+  describe: string;
+  /** 角色状态 */
+  status?: number;
 }
 interface FormProps {
   formInline: FormItemProps;

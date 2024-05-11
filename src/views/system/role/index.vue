@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { useRole } from "./utils/hook";
-import { ref, computed, nextTick, onMounted } from "vue";
-import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { PureTableBar } from "@/components/RePureTableBar";
 import {
   delay,
-  subBefore,
   deviceDetection,
+  subBefore,
   useResizeObserver
 } from "@pureadmin/utils";
+import { computed, nextTick, onMounted, ref } from "vue";
+import { useRole } from "./utils/hook";
 
 // import Database from "@iconify-icons/ri/database-2-line";
 // import More from "@iconify-icons/ep/more-filled";
+import Check from "@iconify-icons/ep/check";
+import Close from "@iconify-icons/ep/close";
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
-import Refresh from "@iconify-icons/ep/refresh";
 import Menu from "@iconify-icons/ep/menu";
+import Refresh from "@iconify-icons/ep/refresh";
 import AddFill from "@iconify-icons/ri/add-circle-line";
-import Close from "@iconify-icons/ep/close";
-import Check from "@iconify-icons/ep/check";
 
 defineOptions({
   name: "SystemRole"
@@ -147,7 +147,7 @@ onMounted(() => {
       <PureTableBar
         :class="[isShow && !deviceDetection() ? '!w-[60vw]' : 'w-full']"
         style="transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1)"
-        title="角色管理（仅演示，操作后不生效）"
+        title="角色管理"
         :columns="columns"
         @refresh="onSearch"
       >
@@ -194,22 +194,16 @@ onMounted(() => {
               >
                 修改
               </el-button>
-              <el-popconfirm
-                :title="`是否确认删除角色名称为${row.name}的这条数据`"
-                @confirm="handleDelete(row)"
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                :size="size"
+                :icon="useRenderIcon(Delete)"
+                @click="handleDelete(row)"
               >
-                <template #reference>
-                  <el-button
-                    class="reset-margin"
-                    link
-                    type="primary"
-                    :size="size"
-                    :icon="useRenderIcon(Delete)"
-                  >
-                    删除
-                  </el-button>
-                </template>
-              </el-popconfirm>
+                删除
+              </el-button>
               <el-button
                 class="reset-margin"
                 link

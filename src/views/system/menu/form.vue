@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import ReAnimateSelector from "@/components/ReAnimateSelector";
 import ReCol from "@/components/ReCol";
-import { formRules } from "./utils/rule";
-import { FormProps } from "./utils/types";
-import { transformI18n } from "@/plugins/i18n";
 import { IconSelect } from "@/components/ReIcon";
 import Segmented from "@/components/ReSegmented";
-import ReAnimateSelector from "@/components/ReAnimateSelector";
+import { transformI18n } from "@/plugins/i18n";
+import { ref } from "vue";
 import {
+  fixedTagOptions,
+  frameLoadingOptions,
+  hiddenTagOptions,
+  keepAliveOptions,
   menuTypeOptions,
   showLinkOptions,
-  fixedTagOptions,
-  keepAliveOptions,
-  hiddenTagOptions,
-  showParentOptions,
-  frameLoadingOptions
+  showParentOptions
 } from "./utils/enums";
+import { formRules } from "./utils/rule";
+import { FormProps } from "./utils/types";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     menuType: 0,
     higherMenuOptions: [],
-    parentId: 0,
+    pId: 0,
     title: "",
     name: "",
     path: "",
@@ -40,7 +40,8 @@ const props = withDefaults(defineProps<FormProps>(), {
     hiddenTag: false,
     fixedTag: false,
     showLink: true,
-    showParent: false
+    showParent: false,
+    status: 1
   })
 });
 
@@ -74,7 +75,7 @@ defineExpose({ getRef });
       <re-col>
         <el-form-item label="上级菜单">
           <el-cascader
-            v-model="newFormInline.parentId"
+            v-model="newFormInline.pId"
             class="w-full"
             :options="newFormInline.higherMenuOptions"
             :props="{
