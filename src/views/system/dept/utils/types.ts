@@ -1,6 +1,7 @@
 interface FormItemProps {
+  id?: number; // 部门id
   higherDeptOptions: Record<string, unknown>[];
-  parentId: number;
+  pId: number;
   name: string;
   principal: string;
   phone: string | number;

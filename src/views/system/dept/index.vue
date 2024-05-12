@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { PureTableBar } from "@/components/RePureTableBar";
 import { ref } from "vue";
 import { useDept } from "./utils/hook";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
@@ -71,7 +71,7 @@ const {
     </el-form>
 
     <PureTableBar
-      title="部门管理（仅演示，操作后不生效）"
+      title="部门管理"
       :columns="columns"
       :tableRef="tableRef?.getTableRef()"
       @refresh="onSearch"
@@ -122,26 +122,20 @@ const {
               type="primary"
               :size="size"
               :icon="useRenderIcon(AddFill)"
-              @click="openDialog('新增', { parentId: row.id } as any)"
+              @click="openDialog('新增', { pId: row.id } as any)"
             >
               新增
             </el-button>
-            <el-popconfirm
-              :title="`是否确认删除部门名称为${row.name}的这条数据`"
-              @confirm="handleDelete(row)"
+            <el-button
+              class="reset-margin"
+              link
+              type="primary"
+              :size="size"
+              :icon="useRenderIcon(Delete)"
+              @click="handleDelete(row)"
             >
-              <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(Delete)"
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-popconfirm>
+              删除
+            </el-button>
           </template>
         </pure-table>
       </template>

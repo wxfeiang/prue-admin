@@ -33,6 +33,9 @@ const Role = baseUrlApi("/role");
 const getRolePermissions = baseUrlApi("/role/rolePermissions");
 const updateRole = baseUrlApi("/role/updateRole");
 
+const organizationTree = baseUrlApi("/organization/tree");
+const organization = baseUrlApi("/organization");
+
 /** 获取系统管理-用户管理列表 */
 export const getUserList = (data?: object) => {
   return http.request<ResultTable>("post", emplist, { data });
@@ -113,7 +116,15 @@ export const DelMenu = (params: object) => {
 
 /** 获取系统管理-部门管理列表 */
 export const getDeptList = (data?: object) => {
-  return http.request<Result>("post", "/dept", { data });
+  return http.request<Result>("get", organizationTree, { data });
+};
+/** 获取系统管理-部门/新增 /编辑 */
+export const actionOrganization = (data?: object) => {
+  return http.request<Result>("post", organization, { data });
+};
+/** 获取系统管理-部门管理列表 */
+export const DelOrganization = (params: any) => {
+  return http.request<Result>("delete", organization, { params });
 };
 
 /** 获取系统监控-在线用户列表 */

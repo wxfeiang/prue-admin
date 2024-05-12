@@ -1,21 +1,20 @@
+import {
+  getLogin,
+  refreshTokenApi,
+  type RefreshTokenResult,
+  type UserResult
+} from "@/api/user";
+import { removeToken, setToken, userKey, type DataInfo } from "@/utils/auth";
 import { defineStore } from "pinia";
 import {
-  type userType,
-  store,
-  router,
   resetRouter,
+  router,
   routerArrays,
-  storageLocal
+  storageLocal,
+  store,
+  type userType
 } from "../utils";
-import {
-  type UserResult,
-  type RefreshTokenResult,
-  getLogin,
-  refreshTokenApi
-} from "@/api/user";
 import { useMultiTagsStoreHook } from "./multiTags";
-import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
-import { message } from "@/utils/message";
 
 export const useUserStore = defineStore({
   id: "pure-user",
@@ -87,8 +86,6 @@ export const useUserStore = defineStore({
                 ...restData
               };
               setToken(res.data);
-            } else {
-              message(`${res.message}`, { type: "error" });
             }
             resolve(res);
           })

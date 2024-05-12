@@ -10,7 +10,6 @@ import userAvatar from "@/assets/user.jpg";
 import ReCropperPreview from "@/components/ReCropperPreview";
 import { addDialog } from "@/components/ReDialog";
 import { message } from "@/utils/message";
-import { handleTree } from "@/utils/tree";
 import type { PaginationProps } from "@pureadmin/table";
 import {
   deviceDetection,
@@ -48,7 +47,7 @@ import "./reset.css";
 export function useUser(tableRef: Ref, treeRef: Ref) {
   const form = reactive({
     // 左侧部门树的id
-    deptId: "",
+    pId: "",
     username: "",
     phone: "",
     status: "",
@@ -307,22 +306,19 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
     pagination.total = data.total;
     pagination.pageSize = data.pageSize;
     pagination.currentPage = data.currentPage;
-
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
+    loading.value = false;
   }
 
   const resetForm = formEl => {
     if (!formEl) return;
     formEl.resetFields();
-    form.deptId = "";
+    form.pId = "";
     treeRef.value.onTreeReset();
     onSearch();
   };
 
   function onTreeSelect({ id, selected }) {
-    form.deptId = selected ? id : "";
+    form.pId = selected ? id : "";
     onSearch();
   }
 
@@ -528,8 +524,9 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
 
     // 归属部门
     const { data } = await getDeptList();
-    higherDeptOptions.value = handleTree(data);
-    treeData.value = handleTree(data);
+
+    higherDeptOptions.value = data; //handleTree(data);
+    treeData.value = data; //handleTree(data);
     treeLoading.value = false;
 
     // 角色列表

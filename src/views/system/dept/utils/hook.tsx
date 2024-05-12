@@ -1,13 +1,13 @@
-import dayjs from "dayjs";
-import editForm from "../form.vue";
-import { handleTree } from "@/utils/tree";
-import { message } from "@/utils/message";
-import { getDeptList } from "@/api/system";
-import { usePublicHooks } from "../../hooks";
+import { DelOrganization, actionOrganization, getDeptList } from "@/api/system";
 import { addDialog } from "@/components/ReDialog";
-import { reactive, ref, onMounted, h } from "vue";
+import { message } from "@/utils/message";
+import { cloneDeep, deviceDetection, isAllEmpty } from "@pureadmin/utils";
+import dayjs from "dayjs";
+import { ElMessageBox } from "element-plus";
+import { h, onMounted, reactive, ref } from "vue";
+import { usePublicHooks } from "../../hooks";
+import editForm from "../form.vue";
 import type { FormItemProps } from "../utils/types";
-import { cloneDeep, isAllEmpty, deviceDetection } from "@pureadmin/utils";
 
 export function useDept() {
   const form = reactive({
@@ -74,7 +74,8 @@ export function useDept() {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getDeptList(); // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点parentId，parentId取父节点id
+    const { data } = await getDeptList(); // 这里是返回一维数组结构，前端自行处理成树结构，返回格式要求：唯一id加父节点pId，pId取父节点id
+
     let newData = data;
     if (!isAllEmpty(form.name)) {
       // 前端搜索部门名称
@@ -84,10 +85,8 @@ export function useDept() {
       // 前端搜索状态
       newData = newData.filter(item => item.status === form.status);
     }
-    dataList.value = handleTree(newData); // 处理成树结构
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
+    dataList.value = newData; // handleTree(newData); // 处理成树结构
+    loading.value = false;
   }
 
   function formatHigherDeptOptions(treeList) {
@@ -107,8 +106,9 @@ export function useDept() {
       title: `${title}部门`,
       props: {
         formInline: {
+          id: row?.id ?? null,
           higherDeptOptions: formatHigherDeptOptions(cloneDeep(dataList.value)),
-          parentId: row?.parentId ?? 0,
+          pId: row?.pId ?? 0,
           name: row?.name ?? "",
           principal: row?.principal ?? "",
           phone: row?.phone ?? "",
@@ -134,15 +134,13 @@ export function useDept() {
           done(); // 关闭弹框
           onSearch(); // 刷新表格数据
         }
-        FormRef.validate(valid => {
+        FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
-            if (title === "新增") {
-              // 实际开发先调用新增接口，再进行下面操作
-              chores();
-            } else {
-              // 实际开发先调用修改接口，再进行下面操作
+            delete curData.higherDeptOptions;
+            const { success } = await actionOrganization(curData);
+            if (success) {
               chores();
             }
           }
@@ -152,8 +150,32 @@ export function useDept() {
   }
 
   function handleDelete(row) {
-    message(`您删除了部门名称为${row.name}的这条数据`, { type: "success" });
-    onSearch();
+    ElMessageBox.confirm(
+      `是否确认删除部门名称为${row.name}的这条数据${row?.children?.length > 0 ? "。注意下级菜单也会一并删除，请谨慎操作" : "?"}`,
+      "系统提示",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error",
+        dangerouslyUseHTMLString: true,
+        draggable: true
+      }
+    )
+      .then(async () => {
+        let params = {
+          id: row.id
+        };
+        const { success } = await await DelOrganization(params);
+        if (success) {
+          message(`您删除了部门名称为${row.name}的这条数据`, {
+            type: "success"
+          });
+          onSearch();
+        }
+      })
+      .catch(() => {
+        message(`取消操作!`, { type: "info" });
+      });
   }
 
   onMounted(() => {

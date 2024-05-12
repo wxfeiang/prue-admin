@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import ReCol from "@/components/ReCol";
+import { ref } from "vue";
+import { usePublicHooks } from "../../hooks";
 import { formRules } from "../utils/rule";
 import { FormProps } from "../utils/types";
-import { usePublicHooks } from "../../hooks";
 
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     title: "新增",
     higherDeptOptions: [],
-    parentId: 0,
+    pId: 0,
     nickname: "",
     username: "",
     password: "",
@@ -123,7 +123,7 @@ defineExpose({ getRef });
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="归属部门">
           <el-cascader
-            v-model="newFormInline.parentId"
+            v-model="newFormInline.pId"
             class="w-full"
             :options="newFormInline.higherDeptOptions"
             :props="{
