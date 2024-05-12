@@ -1,4 +1,5 @@
 import {
+  DelUser,
   getAllRoleList,
   getDeptList,
   getRoleIds,
@@ -99,6 +100,11 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       width: 90
     },
     {
+      label: "用户昵称",
+      prop: "nickname",
+      minWidth: 130
+    },
+    {
       label: "用户名称",
       prop: "username",
       minWidth: 130
@@ -190,7 +196,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   const curScore = ref();
   const roleOptions = ref([]);
 
-  function onChange({ row, index }) {
+  function onChange({ row }) {
     ElMessageBox.confirm(
       `确认要<strong>${
         row.status === 0 ? "停用" : "启用"
@@ -207,26 +213,12 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
       }
     )
       .then(async () => {
-        switchLoadMap.value[index] = Object.assign(
-          {},
-          switchLoadMap.value[index],
-          {
-            loading: true
-          }
-        );
         let params = {
           status: row.status,
           ids: row.id
         };
         const { success } = await getUserStatus(params);
         if (success) {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
           message("已成功修改用户状态", {
             type: "success"
           });
@@ -242,8 +234,32 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
   }
 
   function handleDelete(row) {
-    message(`您删除了用户编号为${row.id}的这条数据`, { type: "success" });
-    onSearch();
+    ElMessageBox.confirm(
+      `是否确认删除用户名称称为${row.name}的这条数据?}`,
+      "系统提示",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error",
+        dangerouslyUseHTMLString: true,
+        draggable: true
+      }
+    )
+      .then(async () => {
+        let params = {
+          ids: [row.id]
+        };
+        const { success } = await DelUser(params);
+        if (success) {
+          message(`您删除了用户名称为${row.name}的这条数据`, {
+            type: "success"
+          });
+          onSearch();
+        }
+      })
+      .catch(() => {
+        message(`取消操作!`, { type: "info" });
+      });
   }
 
   function handleSizeChange(val: number) {
@@ -501,7 +517,7 @@ export function useUser(tableRef: Ref, treeRef: Ref) {
         const curData = options.props.formInline as RoleFormItemProps;
         console.log("curIds", curData.ids);
         // 根据实际业务使用curData.ids和row里的某些字段去调用修改角色接口即可
-        done(); // 关闭弹框
+        done();
       }
     });
   }

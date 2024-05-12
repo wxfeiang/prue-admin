@@ -212,6 +212,7 @@ export function useRole(treeRef: Ref) {
       title: `${title}角色`,
       props: {
         formInline: {
+          id: row?.id ?? "",
           name: row?.name ?? "",
           code: row?.code ?? "",
           describe: row?.describe ?? ""
@@ -277,7 +278,6 @@ export function useRole(treeRef: Ref) {
       };
       //TODO: 分派权限
       const { success } = await actionRoleMenuIds(params);
-
       if (success) {
         message(`角色名称为${name}的菜单权限修改成功`, {
           type: "success"

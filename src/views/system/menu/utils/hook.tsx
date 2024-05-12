@@ -1,13 +1,13 @@
-import { actionMenu, getMenuTree } from "@/api/system";
+import { DelMenu, actionMenu, getMenuTree } from "@/api/system";
 import { addDialog } from "@/components/ReDialog";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { transformI18n } from "@/plugins/i18n";
 import { message } from "@/utils/message";
 import { cloneDeep, deviceDetection, isAllEmpty } from "@pureadmin/utils";
+import { ElMessageBox } from "element-plus";
 import { h, onMounted, reactive, ref } from "vue";
 import editForm from "../form.vue";
 import type { FormItemProps } from "../utils/types";
-
 export function useMenu() {
   const form = reactive({
     title: ""
@@ -134,6 +134,7 @@ export function useMenu() {
       title: `${title}菜单`,
       props: {
         formInline: {
+          id: row?.id ?? null,
           menuType: row?.menuType ?? 0,
           higherMenuOptions: formatHigherMenuOptions(cloneDeep(dataList.value)),
           pId: row?.pId ?? 0,
@@ -180,23 +181,48 @@ export function useMenu() {
         }
         FormRef.validate(async valid => {
           if (valid) {
-            console.log("curData", curData);
             // 表单规则校验通过
-
-            // 实际开发先调用新增接口，再进行下面操作
-            await actionMenu(curData);
-            chores();
+            delete curData.higherMenuOptions;
+            console.log(JSON.stringify(curData));
+            const { success } = await actionMenu(curData);
+            if (success) {
+              chores();
+            }
           }
         });
       }
     });
   }
 
-  function handleDelete(row) {
-    message(`您删除了菜单名称为${transformI18n(row.title)}的这条数据`, {
-      type: "success"
-    });
-    onSearch();
+  async function handleDelete(row) {
+    ElMessageBox.confirm(
+      `是否确认删除菜单名称为${transformI18n(
+        row.title
+      )}的这条数据${row?.children?.length > 0 ? "。注意下级菜单也会一并删除，请谨慎操作" : "?"}`,
+      "系统提示",
+      {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error",
+        dangerouslyUseHTMLString: true,
+        draggable: true
+      }
+    )
+      .then(async () => {
+        let params = {
+          id: row.id
+        };
+        const { success } = await await DelMenu(params);
+        if (success) {
+          message(`您删除了菜单名称为${transformI18n(row.title)}的这条数据`, {
+            type: "success"
+          });
+          onSearch();
+        }
+      })
+      .catch(() => {
+        message(`取消操作!`, { type: "info" });
+      });
   }
 
   onMounted(() => {

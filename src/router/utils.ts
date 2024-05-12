@@ -218,8 +218,7 @@ function initRouter() {
   } else {
     return new Promise(resolve => {
       getAsyncRoutes(params).then(({ data }) => {
-        console.log("🍒");
-
+        console.log("重新获取路由---");
         handleAsyncRoutes(cloneDeep(changeTree(data)));
         resolve(router);
       });

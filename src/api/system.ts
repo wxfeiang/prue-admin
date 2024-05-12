@@ -22,6 +22,7 @@ type ResultTable = {
     currentPage?: number;
   };
 };
+const employee = baseUrlApi("/employee");
 const emplist = baseUrlApi("/employee/list");
 const empChangestaus = baseUrlApi("/employee/status");
 const menuTree = baseUrlApi("/menu/tree");
@@ -45,6 +46,10 @@ export const getUserStatus = (params?: any) => {
     { params: { ids: params.ids } }
   );
 };
+/** 获取系统管理-用户管理列表 */
+export const DelUser = (params?: any) => {
+  return http.request<ResultTable>("delete", employee, { params });
+};
 
 /** 系统管理-用户管理-获取所有角色列表 */
 export const getAllRoleList = () => {
@@ -60,11 +65,12 @@ export const getRoleIds = (data?: object) => {
 export const getRoleList = (data: object) => {
   return http.request<ResultTable>("post", roleList, { data });
 };
-
-/** 获取系统管理-角色新增/编辑 */
-export const actionRole = (data: object) => {
-  return http.request<ResultTable>("post", Role, { data });
+/** 获取系统管理-角色编辑 */
+export const actionRole = (data: any) => {
+  const method = data?.id ? "put" : "post";
+  return http.request<ResultTable>(method, Role, { data });
 };
+
 /** 角色管理-删除 */
 export const delRole = (params: object) => {
   return http.request<ResultTable>("delete", Role, { params });
@@ -96,8 +102,13 @@ export const getMenuList = () => {
 };
 
 /** 获取系统管理-菜单管理列表 */
-export const actionMenu = (data: object) => {
-  return http.request<Result>("post", Menu, { data });
+export const actionMenu = (data: any) => {
+  const method = data?.id ? "put" : "post";
+  return http.request<Result>(method, Menu, { data });
+};
+/** 获取系统管理-菜单管理列表 */
+export const DelMenu = (params: object) => {
+  return http.request<Result>("delete", Menu, { params });
 };
 
 /** 获取系统管理-部门管理列表 */
