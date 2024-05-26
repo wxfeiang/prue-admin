@@ -30,7 +30,7 @@ export const useImageVerify = (remote = false, width = 120, height = 40) => {
   // 请求在线图形码
   const getNetworkCode = async () => {
     const { data } = await getCodeImg();
-    remoteImg.value = data;
+    remoteImg.value = "data:image/svg+xml;base64," + data.data;
   };
 
   return {

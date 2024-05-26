@@ -48,6 +48,13 @@ defineExpose({ getImgCode });
     @click="getImgCode"
   />
   <template v-else>
-    <div @click="getNetworkCode" v-html="remoteImg" />
+    <el-image
+      :src="remoteImg"
+      class="cursor-pointer"
+      style="width: 120px; height: 34px"
+      @click="getNetworkCode"
+    >
+      <template #error> 加载失败 </template>
+    </el-image>
   </template>
 </template>
