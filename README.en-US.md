@@ -10,11 +10,9 @@
 
 `vue-pure-admin` is an open source, free and out-of-the-box middle and backend management system template. Completely adopts `ECMAScript` module (`ESM`) specifications to write and organize code, using the latest `Vue3`, `Vite`, `Element-Plus`, `TypeScript`, `Pinia`, `Tailwindcss` and other mainstream technologies develop
 
-## Sponsors
+## R&D philosophy
 
-<a class="logo" href="https://ai-tools.cn/resume/start" target="_blank" rel="sponsored noopener">
-  <img src="./public/sponsors/aitools.svg" alt="aitools">
-</a>
+Seek innovation in stability and see the future in technology
 
 ## Thin version (offering non-internationalized and internationalized versions)
 
@@ -36,6 +34,14 @@ The simplified version is based on the shelf extracted from [vue-pure-admin](htt
 ## Quality service, software outsourcing, sponsorship support
 
 [Click me for details](https://pure-admin.github.io/pure-admin-doc/pages/service/)
+
+## `js` version
+
+[Click me to view js version](https://pure-admin.github.io/pure-admin-doc/pages/js/)
+
+## `max` version
+
+[Click me to view the max version](https://github.com/pure-admin/vue-pure-admin-max)
 
 ## Tauri
 
@@ -184,6 +190,7 @@ Thank you very much for your in-depth understanding of the source code and your 
 |      [WitMiao](https://github.com/WitMiao)      |   [code](https://github.com/pure-admin/vue-pure-admin/commits?author=WitMiao)    |
 |     [QFifteen](https://github.com/QFifteen)     |   [code](https://github.com/pure-admin/vue-pure-admin/commits?author=QFifteen)   |
 |      [edgexie](https://github.com/edgexie)      |   [code](https://github.com/pure-admin/vue-pure-admin/commits?author=edgexie)    |
+|       [way-jm](https://github.com/way-jm)       |    [code](https://github.com/pure-admin/vue-pure-admin/commits?author=way-jm)    |
 
 ## Git Contribution submission specification
 
