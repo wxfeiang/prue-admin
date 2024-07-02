@@ -74,7 +74,7 @@ export function useRole(treeRef: Ref) {
           inactive-text="已停用"
           inline-prompt
           style={switchStyle.value}
-          onChange={() => onChange(scope as any)}
+          beforeChange={() => onChange(scope as any)}
         />
       ),
       minWidth: 90
@@ -109,35 +109,39 @@ export function useRole(treeRef: Ref) {
   // });
 
   function onChange({ row }) {
-    ElMessageBox.confirm(
-      `确认要<strong>${
-        row.status === 0 ? "停用" : "启用"
-      }</strong><strong style='color:var(--el-color-primary)'>${
-        row.name
-      }</strong>吗?`,
-      "系统提示",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-        dangerouslyUseHTMLString: true,
-        draggable: true
-      }
-    )
-      .then(async () => {
-        let params = {
-          ...row
-        };
-        const { success } = await actionRole(params);
-        if (success) {
-          message("已成功修改角色状态", {
-            type: "success"
-          });
+    return new Promise(resolve => {
+      ElMessageBox.confirm(
+        `确认要<strong>${
+          row.status === 0 ? "启用" : "停用"
+        }</strong><strong style='color:var(--el-color-primary)'>${
+          row.name
+        }</strong>吗?`,
+        "系统提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+          dangerouslyUseHTMLString: true,
+          draggable: true
         }
-      })
-      .catch(() => {
-        row.status === 0 ? (row.status = 1) : (row.status = 0);
-      });
+      )
+        .then(async () => {
+          let params = {
+            ...row,
+            status: row.status === 0 ? 1 : 0
+          };
+          const { success } = await actionRole(params);
+          if (success) {
+            message("已成功修改角色状态", {
+              type: "success"
+            });
+          }
+          return resolve(true);
+        })
+        .catch(() => {
+          return resolve(false);
+        });
+    });
   }
 
   function handleDelete(row) {
