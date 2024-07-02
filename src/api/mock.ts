@@ -1,10 +1,10 @@
 import { http } from "@/utils/http";
-
+import { baseUrlApi } from "./utils";
 type Result = {
   success: boolean;
   data: Array<any>;
 };
-
+const fileUpload = baseUrlApi("/base/uploadLocal");
 /** 地图数据 */
 export const mapJson = (params?: object) => {
   return http.request<Result>("get", "/get-map-info", { params });
@@ -14,7 +14,7 @@ export const mapJson = (params?: object) => {
 export const formUpload = data => {
   return http.request<Result>(
     "post",
-    "https://run.mocky.io/v3/3aa761d7-b0b3-4a03-96b3-6168d4f7467b",
+    fileUpload,
     { data },
     {
       headers: {

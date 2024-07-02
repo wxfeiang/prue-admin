@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
 import { formUpload } from "@/api/mock";
-import { message } from "@/utils/message";
-import { type UserInfo, getMine } from "@/api/user";
-import type { FormInstance, FormRules } from "element-plus";
+import { getMine, type UserInfo } from "@/api/user";
 import ReCropperPreview from "@/components/ReCropperPreview";
-import { createFormData, deviceDetection } from "@pureadmin/utils";
+import { message } from "@/utils/message";
 import uploadLine from "@iconify-icons/ri/upload-line";
+import { createFormData, deviceDetection } from "@pureadmin/utils";
+import type { FormInstance, FormRules } from "element-plus";
+import { reactive, ref } from "vue";
 
 defineOptions({
   name: "Profile"
@@ -18,7 +18,7 @@ const cropRef = ref();
 const uploadRef = ref();
 const isShow = ref(false);
 const userInfoFormRef = ref<FormInstance>();
-
+const baseUrl = import.meta.env.VITE_ROUTER_HISTORY;
 const userInfos = reactive({
   avatar: "",
   nickname: "",
@@ -68,22 +68,36 @@ const handleClose = () => {
 
 const onCropper = ({ blob }) => (cropperBlob.value = blob);
 
-const handleSubmitImage = () => {
+const handleSubmitImage = async () => {
   const formData = createFormData({
-    files: new File([cropperBlob.value], "avatar")
+    file: new File([cropperBlob.value], "avatar.png")
   });
-  formUpload(formData)
-    .then(({ success, data }) => {
-      if (success) {
-        message("更新头像成功", { type: "success" });
-        handleClose();
-      } else {
-        message("更新头像失败");
-      }
-    })
-    .catch(error => {
-      message(`提交异常 ${error}`, { type: "error" });
-    });
+  try {
+    const { success, data } = await formUpload(formData);
+    if (success) {
+      userInfos.avatar = data.url;
+      message("更新头像成功", { type: "success" });
+      handleClose();
+    } else {
+      message("更新头像失败");
+    }
+  } catch (error) {
+    message(`提交异常 ${error}`, { type: "error" });
+  }
+  // formUpload(formData)
+  //   .then(res => {
+  //     const { success, data } = res as any;
+  //     if (success) {
+  //       userInfos.avatar = data.url;
+  //       message("更新头像成功", { type: "success" });
+  //       handleClose();
+  //     } else {
+  //       message("更新头像失败");
+  //     }
+  //   })
+  //   .catch(error => {
+  //     message(`提交异常 ${error}`, { type: "error" });
+  //   });
 };
 
 // 更新信息
@@ -118,7 +132,7 @@ getMine().then(res => {
       :model="userInfos"
     >
       <el-form-item label="头像">
-        <el-avatar :size="80" :src="userInfos.avatar" />
+        <el-avatar :size="80" :src="baseUrl + userInfos.avatar" />
         <el-upload
           ref="uploadRef"
           accept="image/*"
